@@ -3,8 +3,8 @@ const dotenv = require( "dotenv" );
 const helmet = require( "helmet" );
 const morgan = require( "morgan" );
 
-const userRoute = require( './routes/users' );
-const authRoute = require( './routes/auth' );
+const userRouter = require( './routes/users' );
+const authRouter = require( './routes/auth' );
 
 dotenv.config();
 
@@ -21,9 +21,9 @@ app.use( "/test", ( req, res ) => {
     res.status( 200 ).send( "Server is running" );
 } );
 
-app.use( "/api/users", userRoute );
-app.use( "/api/auth", authRoute );
+app.use( "/api", authRouter );
+app.use( "/api/users", userRouter );
 
 app.listen( 8000, () => {
-    console.log( 'Server is ready' )
-} )
+    console.log( 'Server is ready' );
+} );
