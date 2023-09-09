@@ -3,14 +3,15 @@ const dotenv = require( "dotenv" );
 const helmet = require( "helmet" );
 const morgan = require( "morgan" );
 
-const userRouter = require( './routes/users' );
 const authRouter = require( './routes/auth' );
+const usersRouter = require( './routes/users' );
+const postsRouter = require( './routes/posts' );
 
 dotenv.config();
 
 const app = express();
 // Connecting Database
-require( "./utils/database" ).mongooseConnect();
+require( "./services/databases" ).mongooseConnect();
 
 // Middleware
 app.use( express.json() );
@@ -22,7 +23,8 @@ app.use( "/test", ( req, res ) => {
 } );
 
 app.use( "/api", authRouter );
-app.use( "/api/users", userRouter );
+app.use( "/api/users", usersRouter );
+app.use( "/api/posts", postsRouter );
 
 app.listen( 8000, () => {
     console.log( 'Server is ready' );
