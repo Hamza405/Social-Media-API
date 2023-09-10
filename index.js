@@ -1,4 +1,5 @@
 const express = require( "express" );
+const cors = require( "cors" );
 const dotenv = require( "dotenv" );
 const helmet = require( "helmet" );
 const morgan = require( "morgan" );
@@ -9,11 +10,13 @@ const postsRouter = require( './routes/posts' );
 
 dotenv.config();
 
-const app = express();
+// app.use( express.urlencoded( { extended: true } ) )
 // Connecting Database
 require( "./services/databases" ).mongooseConnect();
 
 // Middleware
+const app = express();
+app.use( cors() );
 app.use( express.json() );
 app.use( helmet() );
 app.use( morgan( "common" ) );
