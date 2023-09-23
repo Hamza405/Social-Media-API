@@ -2,7 +2,7 @@ const User = require( "../models/User" );
 const RefreshToken = require( "../models/RefreshToken" )
 const bcrypt = require( "bcrypt" );
 const jwt = require( "jsonwebtoken" );
-const { errorHandler } = require( "../utils" );
+const { errorHandler, HttpError } = require( "../utils" );
 
 function validateEmail( email ) {
     var regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
@@ -50,17 +50,17 @@ exports.register = errorHandler( async ( req, res ) => {
         await refreshTokenDoc.save();
 
         const accessToken = generateAccessToken( newUser.id, newUser.username );
-        const refreshToken = generateRefreshToken( newUser.id, );
+        const refreshToken = generateRefreshToken( newUser.id, refreshTokenDoc.id );
 
         return { user, accessToken, refreshToken };
     } catch ( err ) {
         console.log( err )
         if ( err.keyPattern.username ) {
-            return res.status( 401 ).json( { error: 'Error when signup', message: "This user name is used before!" } )
+            throw new HttpError( 401, "This user name is used before!" );
         } else if ( err.keyPattern.email ) {
-            return res.status( 401 ).json( { error: 'Error when signup', message: "This email is used before!" } )
+            throw new HttpError( 401, "This email is used before!" );
         } else {
-            return res.status( 500 ).json( { error: 'Error when signup', message: err } )
+            throw new HttpError( 500, err );
         }
     }
 } );
@@ -75,6 +75,6 @@ exports.login = async ( req, res ) => {
 
         res.status( 200 ).json( user )
     } catch ( err ) {
-        res.status( 500 ).json( { error: 'Error when signup', message: JSON.stringify( err ) } )
+        throw new HttpError( 400, err );
     }
 };

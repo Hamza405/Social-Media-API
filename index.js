@@ -25,9 +25,15 @@ app.use( "/test", ( req, res ) => {
     res.status( 200 ).send( "Server is running" );
 } );
 
+
 app.use( "/api", authRouter );
 app.use( "/api/users", usersRouter );
 app.use( "/api/posts", postsRouter );
+
+
+app.use( ( err, req, res, next ) => {
+    res.status( err.statusCode || 500 ).send( { error: err.message } )
+} )
 
 app.listen( 8000, () => {
     console.log( 'Server is ready' );

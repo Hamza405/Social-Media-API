@@ -1,7 +1,7 @@
-const mongoose = require( 'mongoose' );
+const mongoose = require( "mongoose" );
 
 const RefreshTokenSchema = new mongoose.Schema( {
-    owner: { type: Schema.Types.ObjectId, ref: 'User' }
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 } );
 
 
