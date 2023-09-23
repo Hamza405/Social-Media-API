@@ -7,6 +7,7 @@ const morgan = require( "morgan" );
 const authRouter = require( './routes/auth' );
 const usersRouter = require( './routes/users' );
 const postsRouter = require( './routes/posts' );
+const { ErrorHandler, VerifyAccessToken } = require( "./middleware" );
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use( express.json() );
 app.use( helmet() );
 app.use( morgan( "common" ) );
 
-app.use( "/test", ( req, res ) => {
+app.use( "/test", VerifyAccessToken, ( req, res ) => {
     res.status( 200 ).send( "Server is running" );
 } );
 
@@ -31,9 +32,7 @@ app.use( "/api/users", usersRouter );
 app.use( "/api/posts", postsRouter );
 
 
-app.use( ( err, req, res, next ) => {
-    res.status( err.statusCode || 500 ).send( { error: err.message } )
-} )
+app.use( ErrorHandler );
 
 app.listen( 8000, () => {
     console.log( 'Server is ready' );

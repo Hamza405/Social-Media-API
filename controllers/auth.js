@@ -10,7 +10,7 @@ function validateEmail( email ) {
 }
 
 function generateAccessToken( userId, userName ) {
-    return jwt.sign( { userId, userName }, process.env.TOKEN_SECRET_KEY, { expiresIn: '10m' } );
+    return jwt.sign( { userId, userName }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '10m' } );
 }
 
 function generateRefreshToken( userId, userName, refreshTokenId ) {
@@ -18,7 +18,7 @@ function generateRefreshToken( userId, userName, refreshTokenId ) {
         userId: userId,
         userName: userName,
         tokenId: refreshTokenId
-    }, process.env.TOKEN_SECRET_KEY, {
+    }, process.env.REFRESH_TOKEN_SECRET_KEY, {
         expiresIn: '30d'
     } );
 }
@@ -27,7 +27,7 @@ function generateRefreshToken( userId, userName, refreshTokenId ) {
 const validateRefreshToken = async ( token ) => {
     const decodeToken = () => {
         try {
-            return jwt.verify( token, process.env.TOKEN_SECRET_KEY );
+            return jwt.verify( token, process.env.REFRESH_TOKEN_SECRET_KEY );
         } catch ( err ) {
             // err
             throw new HttpError( 400, 'Unauthorised' );
